@@ -21,6 +21,8 @@ clock → crow in 1 (optional)
 
 `playhead` row shows current step during playback, and a cursor for the currently selected step when editing.
 
+press a step on the `playhead` row to select it. the `keyboard` will display the note assigned to the step, which can be changed by pressing a `keyboard` key.
+
 for each step:
 - `gate/accent` can be off, gate on, or accent on
 - `slide` can be off or on
@@ -28,10 +30,10 @@ for each step:
 
 hold `meta` and select a `gate/accent` step to immediately turn it off.
 
-`left/right` moves the cursor between steps. the `keyboard` will display the note assigned to the step, which can be changed by pressing a `keyboard` key.
+## save/load patterns
+go to the `acid data` PARAMETERS sub-menu to save and load patterns.
 
 ## future
-- save/load patterns
 - range selection
 - crow "satellite" mode (allow continued playback disconnected from norns, re-connect to edit pattern)
 - random pattern generation

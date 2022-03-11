@@ -10,7 +10,14 @@
 -- designed for use with the open source x0x-heart + pacemaker
 -- http://openmusiclabs.com/projects/x0x-heart
 
-local s = require 'sequins'
+
+fileselect = require "fileselect"
+textentry= require "textentry"
+save_load = include "acid/lib/save_load"
+include "acid/lib/globals"
+
+s = require 'sequins'
+new_data_loaded = false
 
 local g = grid.connect()
 
@@ -72,7 +79,7 @@ local send_accent_off = crow_send_accent_off
 local send_slide_on = crow_send_slide_on
 local send_slide_off = crow_send_slide_off
 
-local function jump_to_step(n)
+function jump_to_step(n)
   context.pulse:select(n)
   context.range:select(n)
   context.note:select(n)
@@ -132,6 +139,13 @@ local function on_pulse()
 
     if nextslide == 0 then
       send_gate_off()
+    end
+  end
+
+  if pulse == 6 then
+    if new_data_loaded == true then
+      jump_to_step(context.currstep+1)
+      new_data_loaded = false
     end
   end
 end
@@ -196,9 +210,9 @@ function gridredraw()
   g:led(12, r, selection == 11 and 5 or 2)
   g:led(13, r, selection == 12 and 5 or 2)
 
-  -- step left/right
-  g:led(15, 6, 5)
-  g:led(16, 6, 5)
+  -- -- step left/right
+  -- g:led(15, 6, 5)
+  -- g:led(16, 6, 5)
 
   -- meta
   g:led(16, r, 5)
@@ -288,16 +302,9 @@ function g.key(x, y, z)
     context.cursor = x
   end
 
-  -- left
-  if y == 6 and x == 15 and z == 1 then
-    context.cursor = context.cursor - 1
-    if context.cursor < 1 then context.cursor = context.length end
-  end
-
-  -- right
-  if y == 6 and x == 16 and z == 1 then
-    context.cursor = context.cursor + 1
-    if context.cursor > context.length then context.cursor = 1 end
+  -- select cursor
+  if y == 1 and z == 1 then
+    context.cursor = x
   end
 
   -- note input
@@ -403,6 +410,7 @@ function redraw()
 end
 
 function init()
+  save_load.init()
   clock.run(
   function()
     while true do
