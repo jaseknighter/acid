@@ -47,7 +47,81 @@ context = {
   -- playback
   running = false
 }
+--params
+params:add_group("acid steps",3)
 
+params:add{
+  type="number", id = "step_amt", name = "step amout",min=1, max=8, default = 1,
+  action=function(x) 
+  end
+}
+
+params:add{
+  type="number", id = "step_start", name = "step start",min=1, max=16, default = 1,
+  action=function(x) 
+    local step_end = params:get("step_end")
+    if x > step_end then params:set("step_start",step_end) end
+  end
+}
+
+params:add{
+  type="number", id = "step_end", name = "step end",min=1, max=16, default = 16,
+  action=function(x) 
+    local step_start = params:get("step_start")
+    if x < step_start then params:set("step_end",step_start) end
+  end
+}
+
+params:add_trigger("step_amt_trg", "> apply step amount")
+params:set_action("step_amt_trg", function(x) 
+  local step_amt = params:get("step_amt")
+  context.range:step(step_amt)
+  context.note:step(step_amt)
+  context.gate:step(step_amt)
+  context.accent:step(step_amt)
+  context.slide:step(step_amt)
+  context.octave:step(step_amt)
+end)
+params:hide("step_amt_trg")
+
+params:add_trigger("step_start_trg", "> apply step start")
+params:set_action("step_start_trg", function(x) 
+  local step = params:get("step_start")
+  context.range:select(step)
+  context.note:select(step)
+  context.gate:select(step)
+  context.accent:select(step)
+  context.slide:select(step)
+  context.octave:select(step)
+end)
+params:hide("step_start_trg")
+
+
+-- params:add_trigger("step_end_trg", "> apply step end")
+-- params:set_action("step_end_trg", function(x) 
+--   local step = params:get("step_end")
+--   context.range:select(step)
+--   context.note:select(step)
+--   context.gate:select(step)
+--   context.accent:select(step)
+--   context.slide:select(step)
+--   context.octave:select(step)
+-- end)
+
+
+function check_pulse1_step_params()
+  
+end
+
+function check_pulse6_step_params()
+  if context.range.ix + context.range.n - 1 >= params:get("step_end") then
+    params:set("step_amt_trg",1)
+    params:set("step_start_trg",1)
+  end
+
+end
+
+--crow
 local function crow_send_cv(volts)
   crow.output[1].volts = volts
 end
@@ -110,6 +184,7 @@ local function on_pulse()
   pulse = context.pulse()
 
   if pulse == 1 then
+    check_pulse1_step_params()
     context.currstep = context.range()
 
     send_cv(
@@ -143,10 +218,7 @@ local function on_pulse()
   end
 
   if pulse == 6 then
-    if new_data_loaded == true then
-      jump_to_step(context.currstep+1)
-      new_data_loaded = false
-    end
+    check_pulse6_step_params()
   end
 end
 

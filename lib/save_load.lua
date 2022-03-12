@@ -77,16 +77,15 @@ function save_load.load_acid_data(path)
     -- last_param.options[1] = pset_path
 
 
-    -- load sequence data
-    -- context.pulse   = s(acid_data.context.pulse.data)
-    context.range   = s(acid_data.context.range.data)
-    context.note    = s(acid_data.context.note.data)
-    context.gate    = s(acid_data.context.gate.data)
-    context.accent  = s(acid_data.context.accent.data)
-    context.slide   = s(acid_data.context.slide.data)
-    context.octave  = s(acid_data.context.octave.data)
-    new_data_loaded = true
-    print("sequence is now loaded")
+    -- set sequence data
+    context.range:settable(acid_data.context.range.data)
+    context.note:settable(acid_data.context.note.data)
+    context.gate:settable(acid_data.context.gate.data)
+    context.accent:settable(acid_data.context.accent.data)
+    context.slide:settable(acid_data.context.slide.data)
+    context.octave:settable(acid_data.context.octave.data)
+    -- new_data_loaded = true
+    -- print("sequence is now loaded")
 
           
 
@@ -111,7 +110,7 @@ function save_load.init()
 --       print("last_loaded",last_loaded)
 --   end}
 
-  params:add_separator("DATA MANAGEMENT")
+  -- params:add_separator("DATA MANAGEMENT")
   params:add_group("acid data",4)
 
   params:add_trigger("save_acid_data", "> SAVE ACID DATA")

@@ -30,6 +30,9 @@ for each step:
 
 hold `meta` and select a `gate/accent` step to immediately turn it off.
 
+## step values
+go to the `acid steps` PARAMETERS sub-menu to change step amount, step start, and step end.
+
 ## save/load patterns
 go to the `acid data` PARAMETERS sub-menu to save and load patterns.
 
